@@ -18,7 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 use_inline_resources
-action :create do
+
+def unicorn_service_template
   template "/etc/init.d/#{new_resource.service_name}" do
     owner new_resource.owner
     group new_resource.group
@@ -47,9 +48,25 @@ action :create do
       variables new_resource.variables
     end
   end
+end
 
+def init_unicorn_service(*actions)
   service new_resource.service_name do
     supports restart: true, status: true, reload: true
-    action [:enable, :start]
+    action actions
   end
+end
+
+action :enable do
+  unicorn_service_template
+  init_unicorn_service :enable
+end
+
+action :create do
+  unicorn_service_template
+  init_unicorn_service [:enable, :start]
+end
+
+action :restart do
+  init_unicorn_service :restart
 end

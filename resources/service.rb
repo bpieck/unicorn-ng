@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-actions        :create
+actions        :create, :enable, :restart
 default_action :create
 
 attribute :rails_root,     kind_of: String, name_attribute: true
